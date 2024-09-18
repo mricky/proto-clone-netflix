@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use PhpParser\Node\Expr\Assign;
 
 class RegisteredUserController extends Controller
 {
@@ -42,8 +43,12 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        
+        $user->assignRole('user');
+        
         event(new Registered($user));
 
+        
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
